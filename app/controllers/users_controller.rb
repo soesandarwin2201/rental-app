@@ -3,7 +3,7 @@ class UsersController < ApplicationController
      before_action :find_user, except: %i[create index]
    
      def index 
-       @users = User.all
+       @users = User.includes(:phones).all
        render json: @users, status: :ok
      end
    
@@ -12,13 +12,21 @@ class UsersController < ApplicationController
      end
    
      def create 
-       @user = User.new(user_params)
-       if @user.save
-         render json: @user, status: :created
-       else 
-         render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
-       end
-     end
+      @user = User.new(user_params)
+      if @user.save
+        id = @user.id
+    
+        @phones = params[:phones].map do |phone| 
+          Phone.create!(number: phone, user_id: id)
+        end
+    
+        Phone.import(@phones) # Use `import` for bulk insertion
+        render json: @user, status: :created
+      else 
+        render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+      end
+    end
+    
    
      def destroy 
        @user.destroy
@@ -27,13 +35,19 @@ class UsersController < ApplicationController
      private 
    
      def find_user
-       @user = User.find_by_name!(params[:_name])
-     rescue ActiveRecord::RecordNotFound
-       render json: { errors: 'User not found' }, status: :not_found
-     end
+      @user = User.includes(:phones).find_by!(name: params[:name])
+    rescue ActiveRecord::RecordNotFound
+      render json: { errors: 'User not found' }, status: :not_found
+    end
+    
    
      def user_params
-       params.permit(:name, :email, :company_name, :address, :detail, :password, :password_confirmation)
-     end
+      params.require(:user).permit(
+        :name, :email, :company_name, :address, :detail,
+        :password, :password_confirmation,
+        phones: []
+      )
+    end
+    
    end
    
