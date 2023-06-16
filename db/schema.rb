@@ -10,76 +10,91 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_12_154041) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_15_045334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "addresses", force: :cascade do |t|
-    t.string "city"
-    t.string "street"
-    t.string "zone"
-    t.integer "zipcode"
-    t.bigint "house_id", null: false
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["house_id"], name: "index_addresses_on_house_id"
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
   create_table "agents", force: :cascade do |t|
-    t.string "name"
+    t.string "company_name"
     t.string "address"
+    t.string "city"
     t.string "details"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "attributions", force: :cascade do |t|
-    t.string "phone"
-    t.string "name"
-    t.string "company"
-    t.string "facebook"
-    t.string "address"
-    t.bigint "house_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["house_id"], name: "index_attributions_on_house_id"
-  end
-
   create_table "houses", force: :cascade do |t|
     t.string "name"
-    t.integer "bedrooms"
-    t.integer "bathrooms"
+    t.integer "bathroom"
+    t.integer "bedroom"
     t.string "country"
-    t.string "house_status"
-    t.string "house_type"
-    t.float "latitude"
-    t.float "longitude"
+    t.string "home_status"
+    t.string "home_type"
+    t.decimal "longitude"
+    t.decimal "latitude"
     t.float "price"
     t.date "update_date"
-    t.string "detail"
+    t.string "desc"
     t.string "square"
+    t.string "city"
+    t.string "zipcode"
+    t.string "street"
+    t.string "zone"
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "images", force: :cascade do |t|
-    t.string "link"
-    t.bigint "house_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["house_id"], name: "index_images_on_house_id"
+    t.index ["user_id"], name: "index_houses_on_user_id"
   end
 
   create_table "phones", force: :cascade do |t|
-    t.string "phone"
-    t.bigint "agent_id", null: false
+    t.string "number"
+    t.bigint "user_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["agent_id"], name: "index_phones_on_agent_id"
+    t.index ["user_id"], name: "index_phones_on_user_id"
   end
 
-  add_foreign_key "addresses", "houses"
-  add_foreign_key "attributions", "houses"
-  add_foreign_key "images", "houses"
-  add_foreign_key "phones", "agents"
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.string "email"
+    t.string "company_name"
+    t.string "address"
+    t.string "detail"
+    t.string "password"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "houses", "users"
+  add_foreign_key "phones", "users"
 end
