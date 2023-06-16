@@ -6,5 +6,5 @@ class User < ApplicationRecord
             length: { minimum: 6 },
             if: -> { new_record? || !password.nil? }
 
-  
+  has_many :houses
 end
