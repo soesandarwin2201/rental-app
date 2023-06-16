@@ -34,7 +34,7 @@ class HousesController < ApplicationController
         end
 
         def create
-          @house = House.new(house_params)
+          @house = House.new(house_params.merge(user_id: current_user))
           @house.images.attach(params[:house][:images]) if params[:house][:images].present?
 
          if @house.save
@@ -66,7 +66,7 @@ class HousesController < ApplicationController
         private
 
      def house_params
-      params.require(:house).permit(:name, :bedrooms, :bathrooms, :country, :house_status, :house_type, :latitude, :longitude, :price, :update_date, :detail, :square)
+      params.require(:house).permit(:name, :bathroom, :bedroom, :country, :home_status, :house_type, :longitude, :latitude, :price, :update_date, :desc, :square, :city, :zipcode, :street, :zone)
      end
         
 end
