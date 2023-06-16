@@ -7,43 +7,58 @@
 #   Character.create(name: "Luke", movie: movies.first)
 
 
-user_2 = User.create!(
-  name: 'test 6',
-  email: 'test6@gmail.com',
-  company_name: 'test Six Company',
-  address: 'on earth',
-  detail: 'this is test',
-  password: 'test62023'
+# user_2 = User.create!(
+#   name: 'test 10',
+#   email: 'test10@gmail.com',
+#   company_name: 'test Ten Company',
+#   address: 'on earth',
+#   detail: 'this is test',
+#   password: 'test102023',
+#   phones: ["1234567890", "9876543210"]
+# )
+
+# house = House.create!(
+#   name: 'test house',
+#   bathroom: 2,
+#   bedroom: 3,
+#   country: 'test country',
+#   home_status: 'for_test',
+#   home_type: 'test_home',
+#   longitude: 0,
+#   latitude: 0,
+#   price: 30.00,
+#   update_date: "2023-06-16",
+#   desc: 'this is for the test',
+#   square: 3000,
+#   city: 'test',
+#   zipcode: '2034',
+#   street: 'test street',
+#   zone: 'test zone',
+#   user: user_2
+# )
+
+# house.images.attach(
+#   io: File.open('C:\Users\User\Downloads\Telegram Desktop\photo_2023-06-15_19-52-36.jpg'),
+#   filename: 'photo_2023-06-15_19-52-36.jpg',
+#   content_type: 'image/jpg'
+# )
+
+# house.images.attach(
+#   io: File.open('C:\Users\User\Downloads\Telegram Desktop\photo_2023-06-15_19-52-36.jpg'),
+#   filename: 'photo_2023-06-15_19-52-36.jpg',
+#   content_type: 'image/jpg'
+# )
+
+user = User.create!(
+  name: 'test 11',
+  email: 'test11@gmail.com',
+  company_name: 'Test Eleven Company',
+  address: '123 Main St',
+  detail: 'Some details',
+  password: 'test1120230'
 )
 
-house = House.create!(
-  name: 'test house',
-  bathroom: 2,
-  bedroom: 3,
-  country: 'test country',
-  home_status: 'for_test',
-  home_type: 'test_home',
-  longitude: 0,
-  latitude: 0,
-  price: 30.00,
-  update_date: "2023-06-16",
-  desc: 'this is for the test',
-  square: 3000,
-  city: 'test',
-  zipcode: '2034',
-  street: 'test street',
-  zone: 'test zone',
-  user: user_2
-)
-
-house.images.attach(
-  io: File.open('C:\Users\User\Downloads\Telegram Desktop\photo_2023-06-15_19-52-36.jpg'),
-  filename: 'photo_2023-06-15_19-52-36.jpg',
-  content_type: 'image/jpg'
-)
-
-house.images.attach(
-  io: File.open('C:\Users\User\Downloads\Telegram Desktop\photo_2023-06-15_19-52-36.jpg'),
-  filename: 'photo_2023-06-15_19-52-36.jpg',
-  content_type: 'image/jpg'
-)
+phone_numbers = ["1234567890", "9876543210"]
+phone_numbers.each do |number|
+  user.phones.create!(number: number)
+end
