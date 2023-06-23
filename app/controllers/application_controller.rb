@@ -11,6 +11,8 @@ class ApplicationController < ActionController::API
         def authorize_request
           header = request.headers['Authorization']
           header = header.split(' ').last if header
+
+          if header && header != 'null'
           begin
             @decoded = JsonWebToken.decode(header)
             @current_user = User.find(@decoded[:user_id])
@@ -19,5 +21,8 @@ class ApplicationController < ActionController::API
           rescue JWT::DecodeError => e
             render json: { errors: e.message }, status: :unauthorized
           end
+        else
+          @current_user = nil
+        end
         end
 end

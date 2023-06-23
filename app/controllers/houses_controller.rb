@@ -1,4 +1,5 @@
 class HousesController < ApplicationController
+  skip_before_action :authorize_request, only: [:show, :index]
 
      def index 
           @all_houses = House.all.with_attached_images
