@@ -1,29 +1,18 @@
 class HousesController < ApplicationController
   skip_before_action :authorize_request, only: [:show, :index], raise: false
 
-  def index
-    if params[:bl_latitude] && params[:tr_latitude] && params[:bl_longitude] && params[:tr_longitude]
-      # Retrieve the latitude and longitude values from the request parameters
-      bl_latitude = params[:bl_latitude]
-      tr_latitude = params[:tr_latitude]
-      bl_longitude = params[:bl_longitude]
-      tr_longitude = params[:tr_longitude]
-
-      @all_houses = House.where(latitude: bl_latitude..tr_latitude, longitude: bl_longitude..tr_longitude).with_attached_images
-    else
-      @all_houses = House.all.with_attached_images
-    end
-
+  def index 
+    @all_houses = House.all.with_attached_images
     if params[:filter] == 'true'
       @user_houses = House.where(user_id: current_user).with_attached_images
     else
       @user_houses = nil # or @user_houses = []
     end
-
+  
     render json: {
       data: {
-        houses: @all_houses.as_json(only: [:id, :name, :bathroom, :bedroom, :country, :home_status, :home_type, :longitude, :latitude, :price, :update_date, :desc, :square]),
-        userhouses: @user_houses.as_json(only: [:id, :name, :bathroom, :bedroom, :country, :home_status, :home_type, :longitude, :latitude, :price, :update_date, :desc, :square])
+        houses: @all_houses.as_json(only: [:id, :name, :bedrooms, :bathrooms, :country, :house_status, :house_type, :latitude, :longitude, :price, :update_date, :detail, :square]),
+        userhouses: @user_houses.as_json(only: [:id, :name, :bedrooms, :bathrooms, :country, :house_status, :house_type, :latitude, :longitude, :price, :update_date, :detail, :square])
       }
     }, status: :ok
   end
